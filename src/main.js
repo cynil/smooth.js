@@ -15,7 +15,9 @@ require(['ppt'], function(PPT){
 
     var ppt = document.querySelector('.ppt')
     var app = new PPT(ppt, {
-        rollback: false
+        rollback: false,
+        nextBloc: '#go tap',
+        direction: 'horizontal'
     })
     
     PPT.utils.hm('#back').on('press', function(event){
@@ -24,3 +26,11 @@ require(['ppt'], function(PPT){
 
 //end require
 })
+
+
+
+
+
+
+
+

@@ -1,13 +1,16 @@
 @import "./anima.css";
 @import "./ppt.css";
 
+body{
+    font-size: 14px;
+    line-height: 1.428571429
+}
 .stage{
-    padding: 1em;
     color: #ebebeb;
-    font-family: Arial, Helvetica, sans-serif
+    font-family: 'Microsoft yahei', Arial, Helvetica, sans-serif,
 }
 #s-1{
-    background: indianred;
+    background: #1f1e24;
 }
 #s-2{
     background: darkslategrey;
@@ -18,3 +21,29 @@
 #s-4{
     background: chocolate;
 }
+.heading{
+    padding: 0.6em;
+    background: #444443;
+}
+p{
+    padding: 0.6em;
+    background: #7b7778
+}
+.next-stages{
+    padding: 0.6em;
+}
+.next-stages:nth-child(2n+1){
+    background: #505050
+}
+.next-stages:nth-child(2n){
+    background: #474747
+}
+
+
+
+
+
+
+
+
+
