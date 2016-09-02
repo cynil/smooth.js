@@ -14,7 +14,9 @@ require.config({
 require(['ppt'], function(PPT){
 
     var ppt = document.querySelector('.ppt')
-    var app = new PPT(ppt)
+    var app = new PPT(ppt, {
+        rollback: false
+    })
     
     PPT.utils.hm('#back').on('press', function(event){
         app.load(app.stages[0])

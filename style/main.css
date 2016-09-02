@@ -1,27 +1,10 @@
 @import "./anima.css";
+@import "./ppt.css";
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    color: white;
+.stage{
+    padding: 1em;
+    color: #ebebeb;
     font-family: Arial, Helvetica, sans-serif
-}
-html,body,main,section.stage{
-    height: 100%;
-    width: 100%;
-}
-body{
-    overflow: hidden;
-}
-section.stage{
-    position: absolute;
-    transform: translateX(100%);
-    opacity: 0;
-}
-section.stage .bloc{
-    text-align: center;
-    opacity: 0;
 }
 #s-1{
     background: indianred;
