@@ -9,32 +9,32 @@
 </head>
 <body>
 	<main class="ppt">
-		<section class="stage" id="s-1" animate="rightRotateIn">
-            <div class="heading" now="now" animate="rightIn">
-				<h1>一、简介</h1>
+		<section class="stage" id="s-1" animate="rightIn">
+            <div id="heading" class="bloc" now="now" animate="lightSpeedIn">
+				<h1>smooth.js</h1>
 			</div>
-			<div class="bloc" animate="lightSpeedIn">
-				<p>欢迎来到smooth.js的demo演示，smooth.js能够帮助你快速制作PPT演示文稿或者简单的H5页面。你只需要在HTML中声明式地书写代码再加上一点点的Javascript，就可以快速创建具有丰富动画效果的演示文稿。smooth内置了一些CSS动画效果，如果您认为不能满足需求，还可以自行书写，或者借用第三方动画库，例如Animate.css。你可以点击下面的列表前往具体教程，或者也可以直接滑动进入下一帧。</p>
+			<div class="bloc" id="intro" animate="rightInReverse">
+				<h3>很轻的H5、PPT演示文稿制作工具</h3>
 			</div>
-			<div class="bloc" animate="bottomIn">
-				<ul>
-					<li class="next-stages">一、依赖的安装</li>
-					<li class="next-stages">二、如何书写HTML</li>
-					<li class="next-stages">三、如何书写Javascript</li>
-				</ul>
+			<div class="bloc" id="start" animate="fadeIn">
+				<span>开始使用</span>
 			</div>
 		</section>
 		<section class="stage" id="s-2" animate="rightIn">
-            <div class="bloc" animate="rightIn"><h1>2</h1></div>
-			<h1 class="bloc" animate="fadeIn">Introduce</h1>
-			<div class="bloc"><a id="back" href="javascript:void(0)">GO HOME</a></div>
+			<div class="bloc" now = "now" animate="rightInReverse"></div>
+			<p id="gohome">GO</p>
 		</section>
 		<section class="stage" id="s-3" animate="bottomIn">
-            <div class="bloc" animate="bottomIn"><h1>3</h1></div>
+            <div class="heading">
+				<h1>三、如何书写HTML</h1>
+			</div>
 			<h1 class="bloc" animate="fadeIn">Introduce</h1>
 			<div class="bloc" animate="bottomIn">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit similique harum maiores architecto, deserunt optio a repellat? Consequuntur esse, officiis est voluptatibus et adipisci sed quibusdam impedit alias, quae dicta expedita eum consectetur magnam!</div>
 		</section>
 		<section class="stage" id="s-4">
+			<div class="heading">
+				<h1>四、如何书写Javascript</h1>
+			</div>
             <div class="bloc" animate="bottomIn"><h1>4</h1></div>
 			<h1 class="bloc" animate="fadeIn">Introduce</h1>
 		</section>

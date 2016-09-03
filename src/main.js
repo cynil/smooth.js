@@ -15,22 +15,16 @@ require(['ppt'], function(PPT){
 
     var ppt = document.querySelector('.ppt')
     var app = new PPT(ppt, {
-        rollback: false,
-        nextBloc: '#go tap',
-        direction: 'horizontal'
-    })
-    
-    PPT.utils.hm('#back').on('press', function(event){
-        app.load(app.stages[0])
+        rollback: false, 
+        stageControl: 'h',//'v',''
+        flow: '#back tap' //forward only
     })
 
-//end require
+    app.anchor('#gohome', 'swipe', '#s-1')
+
 })
-
-
-
-
-
-
-
-
+/**
+ * next stage prev stage
+ * next bloc prev bloc
+ * certain stage
+ */

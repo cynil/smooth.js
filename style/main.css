@@ -3,47 +3,61 @@
 
 body{
     font-size: 14px;
-    line-height: 1.428571429
+    line-height: 1.428571429;
 }
-.stage{
-    color: #ebebeb;
-    font-family: 'Microsoft yahei', Arial, Helvetica, sans-serif,
+
+img{
+    max-width: 100%
 }
 #s-1{
-    background: #1f1e24;
+    background: #3283b0
 }
 #s-2{
-    background: darkslategrey;
+    background: #323232
 }
-#s-3{
-    background: rebeccapurple;
+.bloc{
+    position: relative;
 }
-#s-4{
-    background: chocolate;
+.bloc#heading{
+    background: #3692c5;
+    height: 40%
 }
-.heading{
-    padding: 0.6em;
-    background: #444443;
+.bloc#heading h1{
+	position: absolute;
+	top: 30%;
+    color: #efefef;
+	font-size: 3.6em;
+	font-family: monospace, Monospace;
+	text-align: center;
+	width: 100%
 }
-p{
-    padding: 0.6em;
-    background: #7b7778
+.bloc#intro{
+    color: #efefef;
+    text-align: right;
+    padding: 0.6em 0;
+    height: 20%;
 }
-.next-stages{
-    padding: 0.6em;
+.bloc#intro h3{
+    padding: 1em 0.6em
 }
-.next-stages:nth-child(2n+1){
-    background: #505050
+.bloc#start{
+    text-align: center;
+    height: 40%
 }
-.next-stages:nth-child(2n){
-    background: #474747
+#start span{
+	padding: 0.4em 1.8em;
+	border: 2px solid #efefef;
+	color: #efefef;
+	font-size: 1.2em;
+	margin: 2em 0
 }
-
-
-
-
-
-
-
-
-
+#gohome{
+	padding: 0.6em;
+	border: 2px solid #ebebeb;
+	color: #efefef;
+	font-size: 1.2em;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
