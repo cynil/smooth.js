@@ -12,7 +12,12 @@ img{
     background: #3283b0
 }
 #s-2{
-    background: #323232
+    background: #323232;
+    color: #ebebeb;
+}
+#s-2 div{
+    height: 20%;
+    padding: 4em 0;
 }
 .bloc#heading{
     background: #3692c5;
@@ -57,3 +62,31 @@ img{
     bottom: 0;
     width: 100%;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
