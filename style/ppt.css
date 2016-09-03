@@ -16,5 +16,6 @@ section.stage{
     opacity: 0;
 }
 section.stage .bloc{
+    position: relative;
     opacity: 0;
 }

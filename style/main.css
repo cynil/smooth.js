@@ -5,7 +5,6 @@ body{
     font-size: 14px;
     line-height: 1.428571429;
 }
-
 img{
     max-width: 100%
 }
@@ -14,9 +13,6 @@ img{
 }
 #s-2{
     background: #323232
-}
-.bloc{
-    position: relative;
 }
 .bloc#heading{
     background: #3692c5;
