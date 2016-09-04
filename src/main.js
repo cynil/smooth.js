@@ -17,10 +17,11 @@ require(['smooth'], function(Smooth){
     
     var app = new Smooth(smooth, {
         rollback: false,
-        flow: '#back tap' //forward only
+        dir: 'v',
+        flow: '#go' //forward only
     })
 
-    app.anchor('#gohome', 'swipe', '#s-1')
+    app.anchor('#gohome', '#s-1')
 
 })
 /**
