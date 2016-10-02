@@ -1,0 +1,35 @@
+{
+  "name": "smooth.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cynil/smooth.js.git"
+  },
+  "keywords": [
+    "ppt",
+    "slider"
+  ],
+  "author": "cynii",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cynil/smooth.js/issues"
+  },
+  "homepage": "https://github.com/cynil/smooth.js#readme",
+  "devDependencies": {
+    "browser-sync": "^2.16.0",
+    "browserify": "^13.1.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-uglify": "^2.0.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
