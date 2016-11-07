@@ -1,3 +1,5 @@
 var Smooth = require('./smooth.js')
 
-var smooth = new Smooth()
+var smooth = document.querySelector('main')
+
+var app = new Smooth(smooth, {})
