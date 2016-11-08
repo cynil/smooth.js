@@ -1,5 +1,7 @@
 var Smooth = require('./smooth.js')
 
-var app = new Smooth('main', {
-    dir: 'vertical'
+var smooth = document.querySelector('main')
+var app = new Smooth(smooth, {
+    direction: 'vertical',
+    stageAnimationOnEnter: 'bottomIn',
 })

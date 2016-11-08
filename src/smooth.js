@@ -19,16 +19,13 @@
 	function isFunction(fn){
 		return Object.prototype.toString.call(fn) === '[object Function]'
 	}
-	function debounce(fn, delay){
-		var timer
+	function throttle(fn, interval){
+		var stamp = Date.now()
 		return function(){
-			var self = this,
-				args = arguments
-
-			clearTimeout(timer)
-			timer = setTimeout(function(){
-				fn.apply(self, arguments)
-			}, delay||400)
+			if(Date.now() - stamp > (interval || 100)){
+				fn.apply(this, arguments)
+				stamp = Date.now()
+			}
 		}
 	}
 	function touch(el){
@@ -43,15 +40,15 @@
  * git repository: https://github.com/cynil/smooth.js
  */
 	function Smooth(el, options){
-		this.el = document.querySelector(el)
+		this.el = el
 		this.options = options || {}
 		this.stages = []
-		this.init()
+		this._init()
 	}
 
 	Smooth.prototype = {
 		constructor: Smooth,
-		init: function(){
+		_init: function(){
 			var self = this
 
 			var rawStage = this.el.querySelectorAll('.stage')
@@ -60,22 +57,36 @@
 				self.stages.push(new Stage(raw, self))
 			})
 
-			this._bindAll()
-			this.currentStage = null
-			this.load(this.stages[0])
+			this._bindEvents()
+			console.log(this)
 		},
-		_bindAll: function(){
+		_bindEvents: function(){
 			var self = this
 
-			touch(document.body).on('tap', debounce(function(event){
-				
-			}, 500))
-		}
+			touch(document.body)
+				.on('tap', throttle(function(event){
+					console.log(event)
+				}))
+				.on('rswipe', throttle(function(event){
+					console.log(event)
+				}))
+		},
+		anchor: function(tag, type, target){
+			touch(tag).on(type, throttle(function(event){
+
+			}))
+		},
+		_load: function(stage){}
 	}
 
-	function Stage(){}
-
-	Stage.prototype = {}
+	function Stage(el, host){
+		this.el = el
+		this.host = host
+		this._init()
+	}
+	Stage.prototype = {
+		_init: function(){}
+	}
 
 
 
@@ -90,7 +101,6 @@
 	function getTime(){
 		return Date.now()
 	}
-
 	function getDistance(x0, y0){
 		return Math.sqrt(x0 * x0 + y0 * y0)
 	}
@@ -101,7 +111,6 @@
 		this._previous = null
 		this._init()
 	}
-
 	Touch.prototype = {
 		_init: function(){
 			this.el.addEventListener('touchstart', this._touchstart.bind(this))
@@ -161,10 +170,9 @@
 
 			this.e.deltaX = X - (this._previousX || 0)
 			this.e.deltaY = Y - (this._previousY || 0)
-			this._previousX = X;this._previousY = Y
+			this._previousX = X; this._previousY = Y
 
 			this._emit('move', this.e)
-
 		},
 		_touchend: function(event){
 			var pointer = event.changedTouches[0]
