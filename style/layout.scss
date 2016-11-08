@@ -3,20 +3,23 @@
     padding: 0;
     box-sizing: border-box;
 }
-html,body,main,.stage{
+html, body, .smooth, .stage{
     height: 100%;
     width: 100%;
 }
 body{
     overflow: hidden;
 }
+.smooth{
+    transform: translateX(100%)
+}
+.smooth.show{
+    transform: translateX(0)
+}
 .stage{
     position: absolute;
-    transform: translateX(100%);
-    opacity: 0;
     
     .bloc{
         position: relative;
-        opacity: 0;
     }
 }

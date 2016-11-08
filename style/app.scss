@@ -1,8 +1,76 @@
 @import "layout.scss";
 @import "animate.scss";
 
-$fontSize: 12px;
+$fontSize: 14px;
+$foreColor: #ededed;
+
+@mixin v-center{
+    /*w, h required*/
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+}
 
 body{
     font-size: $fontSize;
+    color: $foreColor;
+    line-height: 1.42857142857;
+}
+
+main{
+    #s-1{
+        background: linear-gradient(#3692c5 30%, #3283b0 0%);
+        animation: lightSpeedIn 1s ease-in 1;
+    
+        #heading{
+            height: 30%;
+            width: 100%;
+
+            h1{
+                @include v-center;
+                font-size: 3rem;
+                font-family: monospace, Monospace;
+                height: 4.285714286rem;
+                width: 100%;
+                text-align: center;
+            }
+        }
+        #brief{
+            height: 10%;
+            width: 100%;
+
+            h3{
+                @include v-center;
+                font-size: 1rem;
+                height: 1.428571429rem;
+                width: 100%;
+                padding: 0 1rem;
+                text-align: right;
+                font-weight:normal;
+            }
+        }
+        #start{
+            height: 40%;
+            width: 100%;
+
+            p{
+                @include v-center;
+                height: 2.514285714rem;
+                font-size: 1.2rem;
+                width: 100%;
+                text-align: center;
+            }
+            span{
+                display: inline-block;
+                border: 2px solid #ededed;
+                padding: .4rem 2rem;
+
+                &:hover{
+                    background: #ececec;
+                    color: #3283b0;
+                }
+            }
+        }
+    }
 }

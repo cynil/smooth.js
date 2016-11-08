@@ -54,9 +54,11 @@
 			var rawStage = this.el.querySelectorAll('.stage')
 
 			makeArray(rawStage).map(function(raw){
-				self.stages.push(new Stage(raw, self))
+				var stage = self.el.removeChild(raw)
+				self.stages.push(new Stage(stage, self))
 			})
 
+			this.el.classList.add('show')
 			this._bindEvents()
 			console.log(this)
 		},
@@ -66,6 +68,7 @@
 			touch(document.body)
 				.on('tap', throttle(function(event){
 					console.log(event)
+					self._load(self.stages[0])
 				}))
 				.on('rswipe', throttle(function(event){
 					console.log(event)
@@ -76,7 +79,9 @@
 
 			}))
 		},
-		_load: function(stage){}
+		_load: function(stage){
+			this.el.appendChild(stage.el)
+		}
 	}
 
 	function Stage(el, host){
@@ -85,9 +90,24 @@
 		this._init()
 	}
 	Stage.prototype = {
-		_init: function(){}
-	}
+		constructor: Stage,
+		_init: function(){
+			var self = this,
+				rawBlocs = this.el.querySelectorAll('.bloc')
+			
+			self.blocs = []
 
+			makeArray(rawBlocs).map(function(raw){
+				var animation = raw.getAttribute('animation'),
+					now = raw.getAttribute('now')
+
+				self.blocs.push({
+					el: raw,
+					now: now
+				})
+			})
+		}
+	}
 
 
 /**
@@ -113,6 +133,7 @@
 	}
 	Touch.prototype = {
 		_init: function(){
+			console.log(this)
 			this.el.addEventListener('touchstart', this._touchstart.bind(this))
 			this.el.addEventListener('touchmove', this._touchmove.bind(this))
 			this.el.addEventListener('touchend', this._touchend.bind(this))
