@@ -10,14 +10,15 @@
 })(window, function(){
 	'use strict';
 
+/**
+ * utils
+ */
 	function makeArray(list){
 		return Array.prototype.slice.call(list)
 	}
-
 	function isFunction(fn){
 		return Object.prototype.toString.call(fn) === '[object Function]'
 	}
-
 	function debounce(fn, delay){
 		var timer
 		return function(){
@@ -30,15 +31,19 @@
 			}, delay||400)
 		}
 	}
-
 	function touch(el){
-		el = typeof el !== 'string' ? el : document.querySelector(el)
+		el = typeof el === 'string' ? document.querySelector(el) : el
 		if(!el) throw 'touch element not found'
 		return new Touch(el)
 	}
 
+
+/**
+ * smooth.js
+ * git repository: https://github.com/cynil/smooth.js
+ */
 	function Smooth(el, options){
-		this.el = typeof el !== 'string' ? el : document.querySelector(el)
+		this.el = document.querySelector(el)
 		this.options = options || {}
 		this.stages = []
 		this.init()
@@ -48,6 +53,7 @@
 		constructor: Smooth,
 		init: function(){
 			var self = this
+
 			var rawStage = this.el.querySelectorAll('.stage')
 
 			makeArray(rawStage).map(function(raw){
@@ -73,10 +79,10 @@
 
 
 
-	/**
-	 * Touch.js by cynii
-	 * git repository: https://github.com/cynil/touch.js
-	 */
+/**
+ * Touch.js by cynii
+ * git repository: https://github.com/cynil/touch.js
+ */
 	var NEAR = 10,
 		PRESS_DURATION = 600,
 		DOUBLE_INTERVAL = 300

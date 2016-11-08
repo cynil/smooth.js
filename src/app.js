@@ -1,5 +1,5 @@
 var Smooth = require('./smooth.js')
 
-var smooth = document.querySelector('main')
-
-var app = new Smooth(smooth, {})
+var app = new Smooth('main', {
+    dir: 'vertical'
+})

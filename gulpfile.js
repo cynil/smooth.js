@@ -31,7 +31,7 @@ gulp.task('js', function(){
         .bundle()
         .pipe(vinyl('dist.js'))//source
         .pipe(buffer())
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(gulp.dest('./build/'))
         .pipe(reload({stream: true}))
 })
@@ -43,5 +43,17 @@ gulp.task('default', ['scss', 'js'], function(){
         }
     })
 
-    gulp.watch(['./style/*.scss','./src/*.js'], ['scss', 'js'])
+    gulp.watch(['./style/*.scss','./src/*.js','./build/index.html'], ['scss', 'js'])
 })
+
+
+
+
+
+
+
+
+
+
+
+
