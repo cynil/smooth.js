@@ -21,7 +21,6 @@ body{
 main{
     #s-1{
         background: linear-gradient(#3692c5 30%, #3283b0 0%);
-        animation: lightSpeedIn 1s ease-in 1;
     
         #heading{
             height: 30%;
@@ -72,5 +71,17 @@ main{
                 }
             }
         }
+    }
+
+    #s-2{
+        background-color: #323232;
+    }
+
+    #s-3{
+        background-color: indianred;
+    }
+
+    #s-4{
+        background-color: slategray;
     }
 }

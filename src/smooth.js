@@ -60,11 +60,13 @@
 
 			this.el.classList.add('show')
 			this._bindEvents()
-			console.log(this)
+			this.index = -1
 		},
 		_bindEvents: function(){
-			var self = this
 
+			document.body.addEventListener('click', this.nextStageHandler.bind(this))
+			document.body.addEventListener('dblclick', this.nextBlocHandler.bind(this))
+/*
 			touch(document.body)
 				.on('tap', throttle(function(event){
 					console.log(event)
@@ -73,14 +75,47 @@
 				.on('rswipe', throttle(function(event){
 					console.log(event)
 				}))
+*/
 		},
-		anchor: function(tag, type, target){
+		nextStageHandler: function(event){
+			var next = this.index + 1
+			if(this.index === this.stages.length - 1) next = 0
+			this._load(this.stages[next])
+		},
+		nextBlocHandler: function(event){
+			
+		},
+		_load: function(stage){
+			var nextIndex = this.stages.indexOf(stage),
+				forwards =  nextIndex > this.index,
+				currentStage = this.stages[this.index],
+				animation = this.options.stageAnimation,
+				self = this
+
+			if(stage.el.classList.contains(animation)){
+				stage.el.classList.remove(animation)
+			}
+			if(forwards){
+				stage.el.classList.add(animation)
+			}
+			else{
+				stage.el.classList.add(animation + 'Reverse')
+			}
+			this.el.appendChild(stage.el)
+
+			this.el.addEventListener('animationend', function removePrevious(e){
+				try{
+					self.el.removeChild(currentStage.el)
+				}catch(e){}
+				this.removeEventListener('animationend', removePrevious)
+			})
+
+			this.index = nextIndex
+		},
+		anchor: function(tag, target){
 			touch(tag).on(type, throttle(function(event){
 
 			}))
-		},
-		_load: function(stage){
-			this.el.appendChild(stage.el)
 		}
 	}
 
@@ -113,7 +148,7 @@
 /**
  * Touch.js by cynii
  * git repository: https://github.com/cynil/touch.js
- */
+ *
 	var NEAR = 10,
 		PRESS_DURATION = 600,
 		DOUBLE_INTERVAL = 300
@@ -248,6 +283,7 @@
 		}
 	}
 	//↑↑↑ touch.js ends here
+	*/
 
 	//expose Smooth to global
 	return Smooth
