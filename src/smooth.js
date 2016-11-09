@@ -55,7 +55,7 @@
 
 			makeArray(rawStage).map(function(raw){
 				var stage = self.el.removeChild(raw)
-				self.stages.push(new Stage(stage, self))
+				self.stages.push(new Stage(stage))
 			})
 
 			this.el.classList.add('show')
@@ -83,7 +83,7 @@
 			this._load(this.stages[next])
 		},
 		nextBlocHandler: function(event){
-			
+			var a = 0
 		},
 		_load: function(stage){
 			var nextIndex = this.stages.indexOf(stage),
@@ -107,10 +107,18 @@
 				try{
 					self.el.removeChild(currentStage.el)
 				}catch(e){}
+				stage.blocs.map(function(nowBloc){
+					if(nowBloc.now === 'now'){
+						nowBloc.el.classList.add(nowBloc.animation)
+						nowBloc.el.style.animationDelay = nowBloc.el.getAttribute('delay')
+						stage.el.appendChild(nowBloc.el)
+					}
+				})
 				this.removeEventListener('animationend', removePrevious)
 			})
 
 			this.index = nextIndex
+			console.log(stage)
 		},
 		anchor: function(tag, target){
 			touch(tag).on(type, throttle(function(event){
@@ -119,9 +127,9 @@
 		}
 	}
 
-	function Stage(el, host){
+	function Stage(el){
 		this.el = el
-		this.host = host
+		this.blocs = []
 		this._init()
 	}
 	Stage.prototype = {
@@ -129,22 +137,19 @@
 		_init: function(){
 			var self = this,
 				rawBlocs = this.el.querySelectorAll('.bloc')
-			
-			self.blocs = []
 
 			makeArray(rawBlocs).map(function(raw){
 				var animation = raw.getAttribute('animation'),
 					now = raw.getAttribute('now')
 
 				self.blocs.push({
-					el: raw,
-					now: now
+					el: self.el.removeChild(raw),
+					now: now,
+					animation: animation
 				})
 			})
 		}
 	}
-
-
 /**
  * Touch.js by cynii
  * git repository: https://github.com/cynil/touch.js
