@@ -9,15 +9,15 @@
 	}
 })(window, function(){
 	'use strict';
-
 /**
  * utils
  */
 	function makeArray(list){
 		return Array.prototype.slice.call(list)
 	}
-	function isFunction(fn){
-		return Object.prototype.toString.call(fn) === '[object Function]'
+	function touch(el){
+		var el = typeof el === 'string' ? document.querySelector(el) : el
+		return new Touch(el)
 	}
 	function throttle(fn, interval){
 		var stamp = Date.now()
@@ -61,31 +61,30 @@
 			this.el.classList.add('show')
 			this._bindEvents()
 			this.index = -1
+			this._load(this.stages[0])
 		},
 		_bindEvents: function(){
 
-			document.body.addEventListener('click', this.nextStageHandler.bind(this))
+/*			document.body.addEventListener('click', this.nextStageHandler.bind(this))
 			document.body.addEventListener('dblclick', this.nextBlocHandler.bind(this))
-/*
+			*/
+
 			touch(document.body)
-				.on('tap', throttle(function(event){
-					console.log(event)
-					self._load(self.stages[0])
-				}))
-				.on('rswipe', throttle(function(event){
-					console.log(event)
-				}))
-*/
+				.on('swipe', this.nextStageHandler.bind(this))
+				.on('tap', this.nextBlocHandler.bind(this))
+
 		},
 		nextStageHandler: function(event){
-			var next = this.index + 1
-			if(this.index === this.stages.length - 1) next = 0
+			if(this.options.direction === 'vertical' && (event.direction === 0 || event.direction === 2)) return
+			if(this.options.direction === 'horizontal' && (event.direction === 1 || event.direction === 3)) return
+			var next
 			this._load(this.stages[next])
 		},
+
 		nextBlocHandler: function(event){
-			var a = 0
 		},
 		_load: function(stage){
+			console.log(this.index)
 			var nextIndex = this.stages.indexOf(stage),
 				forwards =  nextIndex > this.index,
 				currentStage = this.stages[this.index],
@@ -103,32 +102,37 @@
 			}
 			this.el.appendChild(stage.el)
 
-			this.el.addEventListener('animationend', function removePrevious(e){
-				try{
-					self.el.removeChild(currentStage.el)
-				}catch(e){}
-				stage.blocs.map(function(nowBloc){
-					if(nowBloc.now === 'now'){
-						nowBloc.el.classList.add(nowBloc.animation)
-						nowBloc.el.style.animationDelay = nowBloc.el.getAttribute('delay')
-						stage.el.appendChild(nowBloc.el)
-					}
+			if(!stage.played){
+				this.el.addEventListener('animationend', function removePrevious(e){
+					try{
+						self.el.removeChild(currentStage.el)
+					}catch(e){}
+					stage.blocs.map(function(nowBloc){
+						if(nowBloc.now === 'now'){
+							nowBloc.el.classList.add(nowBloc.animation)
+							nowBloc.el.style.animationDelay = nowBloc.el.getAttribute('delay')
+							stage.el.appendChild(nowBloc.el)
+
+							nowBloc.el.addEventListener('animationend', function removeAnimationClass(e){
+								this.classList.remove(nowBloc.animation)
+								stage.played = true
+								this.removeEventListener('animationend', removeAnimationClass)
+							})
+						}
+					})
+					this.removeEventListener('animationend', removePrevious)
 				})
-				this.removeEventListener('animationend', removePrevious)
-			})
+			}
 
 			this.index = nextIndex
-			console.log(stage)
 		},
 		anchor: function(tag, target){
-			touch(tag).on(type, throttle(function(event){
-
-			}))
 		}
 	}
 
 	function Stage(el){
 		this.el = el
+		this.played = false
 		this.blocs = []
 		this._init()
 	}
@@ -150,145 +154,108 @@
 			})
 		}
 	}
-/**
- * Touch.js by cynii
- * git repository: https://github.com/cynil/touch.js
- *
-	var NEAR = 10,
-		PRESS_DURATION = 600,
-		DOUBLE_INTERVAL = 300
 
-	function getTime(){
-		return Date.now()
-	}
-	function getDistance(x0, y0){
-		return Math.sqrt(x0 * x0 + y0 * y0)
-	}
+	/**
+	 * start Touch.js
+	 */
+	var Touch = (function(){
+		var TAP_DURATION = 200
 
-	function Touch(el){
-		this.el = el
-		this.events = {}
-		this._previous = null
-		this._init()
-	}
-	Touch.prototype = {
-		_init: function(){
-			console.log(this)
-			this.el.addEventListener('touchstart', this._touchstart.bind(this))
-			this.el.addEventListener('touchmove', this._touchmove.bind(this))
-			this.el.addEventListener('touchend', this._touchend.bind(this))
-		},
-		_emit: function(type, event){
-			var callbacks = this.events[type],
-				self = this
-
-			if(!callbacks) return
-			callbacks.map(function(cb){
-				cb.call(self.el, event)
-			})
-		},
-		on: function(type, cb){
-			if(this.events[type] === undefined) {
-				this.events[type] = [cb]
-			}
-			else{
-				this.events[type].push(cb)
-			}
-
-			return this
-		},
-		off: function(type, cb){
-			if (!this.events[type]) return
-			if(!cb) this.events[type] = []
-
-			this.events[type] = this.events[type].filter(function(fn){
-				return fn !== cb
-			})
-		},
-
-		_touchstart: function(event){
-			var pointer = event.touches[0],
-				self = this
-
-			if(this.e) this._previous = this.e
-			this.e = {}
-			this.e.startX = pointer.pageX
-			this.e.startY = pointer.pageY
-			this.e.startTime = getTime()
-
-			this.pressClock = setTimeout(function(){
-				self.e.endTime = getTime()
-				self.e.duration = self.e.endTime - self.e.startTime
-				self._emit('press', self.e)
-			}, PRESS_DURATION)
-		},
-		_touchmove: function(event){
-			var pointer = event.touches[0],
-				X = pointer.pageX - this.e.startX,
-				Y = pointer.pageY - this.e.startY
-
-			if(getDistance(X, Y) > NEAR) clearTimeout(this.pressClock)
-
-			this.e.deltaX = X - (this._previousX || 0)
-			this.e.deltaY = Y - (this._previousY || 0)
-			this._previousX = X; this._previousY = Y
-
-			this._emit('move', this.e)
-		},
-		_touchend: function(event){
-			var pointer = event.changedTouches[0]
-			this.e.endTime = getTime()
-			this.e.duration = this.e.endTime -this.e.startTime
-			this.e.endX = pointer.pageX
-			this.e.endY = pointer.pageY
-
-			clearTimeout(this.pressClock)
-
-			var diffX = this.e.endX - this.e.startX,
-				diffY = this.e.endY - this.e.startY,
-				distance = getDistance(diffX, diffY),
-				rightWards = this.e.endX - this.e.startX > 0,
-				downWards = this.e.endY - this.e.startY > 0,
-				horizontal = Math.abs(diffX) > Math.abs(diffY)
-
-			if(distance > NEAR){
-				if(horizontal && rightWards){
-					this._emit('rswipe', this.e)
-				}
-				else if(horizontal && !rightWards){
-					this._emit('lswipe', this.e)
-				}
-				else if(!horizontal && downWards){
-					this._emit('dswipe', this.e)
-				}
-				else if(!horizontal && !downWards){
-					this._emit('uswipe', this.e)
-				}
-			}
-			else if(distance <= NEAR){
-				if(this.e.duration > PRESS_DURATION){
-					//this._emit('press', this.e)
-				}
-				else if(this.e.duration <= PRESS_DURATION){
-					if(this._previous){
-						if(this.e.startTime - this._previous.endTime > DOUBLE_INTERVAL){
-							this._emit('tap', this.e)
-						}
-						else if(this.e.startTime - this._previous.endTime <= DOUBLE_INTERVAL){
-								this._emit('dbltap', this.e)
-						}
-					}
-					else{
-						this._emit('tap', this.e)
-					}
-				}
-			}
-
-			this._previousX = null;this._previousY = null
+		function getTime(){
+			return Date.now()
 		}
-	}
-	//↑↑↑ touch.js ends here
-	*/
+		function getDistance(x0, y0){
+			return Math.sqrt(x0 * x0 + y0 * y0)
+		}
+
+		function Touch(el){
+			this.el = el
+			this.events = {}
+			this._init()
+		}
+
+		Touch.prototype = {
+			constructor: Touch,
+			_init: function(){
+				this.el.addEventListener('touchstart', this._touchstart.bind(this))
+				this.el.addEventListener('touchend', this._touchend.bind(this))
+			},
+			_emit: function(type, event){
+				var callbacks = this.events[type],
+					self = this
+
+				if(!callbacks) return
+				callbacks.map(function(cb){
+					cb.call(self.el, event)
+				})
+			},
+			on: function(type, cb){
+				if(this.events[type] === undefined) {
+					this.events[type] = [cb]
+				}
+				else{
+					this.events[type].push(cb)
+				}
+
+				return this
+			},
+			off: function(type, cb){
+				if (!this.events[type]) return
+				if(!cb) this.events[type] = []
+
+				this.events[type] = this.events[type].filter(function(fn){
+					return fn !== cb
+				})
+			},
+
+			_touchstart: function(event){
+				var pointer = event.touches[0]
+
+				this.e = this.e || {}
+				this.e.startTime = getTime()
+				this.e.startX = pointer.pageX
+				this.e.startY = pointer.pageY
+			},
+			_touchend: function(event){
+				var pointer = event.changedTouches[0]
+
+				event.duration = getTime() - this.e.startTime
+				event.startX = this.e.startX
+				event.startY = this.e.startY
+				event.endX = pointer.pageX
+				event.endY = pointer.pageY
+
+				var diffX = event.endX - event.startX,
+					diffY = event.endY - event.startY
+
+				event.distance = getDistance(diffX, diffY)
+
+				if(event.duration < TAP_DURATION && event.distance <= 15){
+					this._emit('tap', event)
+				}
+				else if(event.duration >= TAP_DURATION / 2 && event.distance > 15){
+					var rightWards = diffX > 0,
+						downWards = diffY > 0,
+						horizontal = Math.abs(diffX) > Math.abs(diffY)
+
+					if(horizontal && rightWards){
+						event.direction = 0//east
+					}
+					else if(!horizontal && downWards){
+						event.direction = 1//south
+					}
+					else if(horizontal && !rightWards){
+						event.direction = 2//west
+					}
+					else if(!horizontal && !downWards){
+						event.direction = 3//north
+					}
+					this._emit('swipe', event)
+				}
+			}
+		}
+		return Touch
+	})()
 
 	//expose Smooth to global
 	return Smooth
