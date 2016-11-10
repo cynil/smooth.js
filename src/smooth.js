@@ -78,51 +78,79 @@
 			if(this.options.direction === 'vertical' && (event.direction === 0 || event.direction === 2)) return
 			if(this.options.direction === 'horizontal' && (event.direction === 1 || event.direction === 3)) return
 			var next
+
+			if(event.direction === 2 || event.direction === 3){
+				next = this.index + 1
+				if(next === this.stages.length){
+					return 
+				}
+			}
+			else{
+				next = this.index - 1
+				if(next === -1){
+					return
+				}
+			}
 			this._load(this.stages[next])
 		},
 
 		nextBlocHandler: function(event){
+			var stage = this.stages[this.index]
+			if(!this.played){
+				var currentBloc = stage.blocs.filter(function(bloc){
+					return bloc.now !== 'now'
+				})[stage.currentBloc]
+				console.log(stage.currentBloc)
+
+				if(!currentBloc || stage.currentBloc >= stage.blocs.length) return
+
+				currentBloc.el.classList.add(currentBloc.animation)
+				stage.el.appendChild(currentBloc.el)
+				currentBloc.el.addEventListener('animationend', function clearAnimation(event){
+					currentBloc.el.classList.remove(currentBloc.animation)
+					this.removeEventListener('animationend', clearAnimation)
+					stage.currentBloc++
+				})
+			}
 		},
 		_load: function(stage){
-			console.log(this.index)
 			var nextIndex = this.stages.indexOf(stage),
 				forwards =  nextIndex > this.index,
 				currentStage = this.stages[this.index],
 				animation = this.options.stageAnimation,
 				self = this
-
-			if(stage.el.classList.contains(animation)){
-				stage.el.classList.remove(animation)
-			}
+			console.log(forwards, 'prev: ' + this.index, 'current: ' + nextIndex)
 			if(forwards){
+				stage.el.classList.remove(animation + 'Reverse')
 				stage.el.classList.add(animation)
 			}
 			else{
+				stage.el.classList.remove(animation)
 				stage.el.classList.add(animation + 'Reverse')
 			}
 			this.el.appendChild(stage.el)
-
-			if(!stage.played){
-				this.el.addEventListener('animationend', function removePrevious(e){
-					try{
-						self.el.removeChild(currentStage.el)
-					}catch(e){}
-					stage.blocs.map(function(nowBloc){
-						if(nowBloc.now === 'now'){
-							nowBloc.el.classList.add(nowBloc.animation)
-							nowBloc.el.style.animationDelay = nowBloc.el.getAttribute('delay')
-							stage.el.appendChild(nowBloc.el)
-
-							nowBloc.el.addEventListener('animationend', function removeAnimationClass(e){
-								this.classList.remove(nowBloc.animation)
-								stage.played = true
-								this.removeEventListener('animationend', removeAnimationClass)
-							})
+			stage.el.addEventListener('animationend', function clearAnimation(event){
+				try{
+					self.el.removeChild(currentStage.el)
+				}catch(e){}
+				if(!stage.played){
+					stage.blocs.map(function(bloc, index){
+						var delay = bloc.el.getAttribute('delay') || 0
+						if(bloc.now === 'now'){
+							var clock = setTimeout(function(){
+								bloc.el.classList.add(bloc.animation)
+								stage.el.appendChild(bloc.el)
+								bloc.el.addEventListener('animationend', function clearAnimation(event){
+									bloc.el.classList.remove(bloc.animation)
+									this.removeEventListener('animationend', clearAnimation)
+								})
+							}, delay)
 						}
 					})
-					this.removeEventListener('animationend', removePrevious)
-				})
-			}
+					stage.played = true
+				}
+				this.removeEventListener('animationend', clearAnimation)
+			})
 
 			this.index = nextIndex
 		},
@@ -134,6 +162,7 @@
 		this.el = el
 		this.played = false
 		this.blocs = []
+		this.currentBloc = 0
 		this._init()
 	}
 	Stage.prototype = {
