@@ -164,3 +164,15 @@
     transform: rotate3d(0, 0, 1, 0deg);
   }
 }
+.expandIn {
+    transform-origin: center center;
+    animation: expandIn 0.6s ease-out 1;
+}
+@keyframes expandIn {
+    from {
+        transform: scale3d(0, 0, 0);
+    }
+    to {
+    transform: scale3d(1, 1, 1);
+    }
+}

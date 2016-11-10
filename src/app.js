@@ -5,3 +5,5 @@ var app = new Smooth(smooth, {
     direction: 'horizontal',
     stageAnimation: 'rightIn'
 })
+
+app.anchor('#start', 1)

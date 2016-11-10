@@ -1,8 +1,10 @@
 @import "layout.scss";
 @import "animate.scss";
 
-$fontSize: 14px;
+$fontSize: 16px;
 $foreColor: #efefef;
+$blue0: #3692c5;
+$blue1: #3283b0;
 
 @mixin v-center{
     /*w, h required*/
@@ -12,15 +14,25 @@ $foreColor: #efefef;
     margin: auto 0;
 }
 
+@mixin bubble{
+    background-color: $foreColor;
+    position: absolute;
+    border-radius: 50%;
+}
+
 body{
     font-size: $fontSize;
     color: $foreColor;
     line-height: 1.42857142857;
 }
 
+p{
+    margin: 1em;
+}
+
 main{
     #s-1{
-        background: linear-gradient(#3692c5 30%, #3283b0 0%);
+        background: linear-gradient($blue0 30%, $blue1 0%);
     
         #heading{
             height: 30%;
@@ -74,11 +86,38 @@ main{
     }
 
     #s-2{
-        background-color: #323232;
+        background-color: $blue0;
+
+        #steps h1{
+            text-align: center;
+            padding: 2em;
+            font-size: 24px;
+        }
+        #bub1{
+            @include bubble;
+            width: 200px;
+            height: 200px;
+            bottom: -80px;
+            left: -60px;
+        }
+        #bub2{
+            @include bubble;
+            width: 300px;
+            height: 300px;
+            bottom: -220px;
+            left: 80px;
+        }
+        #bub3{
+            @include bubble;
+            width: 200px;
+            height: 200px;
+            bottom: -80px;
+            right: -60px;
+        }
     }
 
     #s-3{
-        background-color: indianred;
+        background-color: $foreColor;
     }
 
     #s-4{

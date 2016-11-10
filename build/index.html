@@ -13,7 +13,7 @@
 				<h1 class="v-center">smooth.js</h1>
 			</div>
 			<div id="brief" class="bloc" now="now" delay="600" animation="lightSpeedIn">
-				<h3 class="v-center">很轻的H5、PPT演示文稿制作工具</h3>
+				<h3 class="v-center">很轻的HTML5演示文稿制作工具</h3>
 			</div>
 			<div id="start" class="bloc" now="now" delay="1000" animation="fadeIn">
 				<p class="v-center">
@@ -22,42 +22,24 @@
 			</div>
 		</section>
 		<section class="stage" id="s-2">
-			<div id="static">
-				<p>这是一个静态区块，它随着stage一起进场。</p>
-			</div>
-			<div class="bloc" now="now" animation="rightRotateIn">
-				<p>这是一个nowbloc区块，它会在stage进场动画执行后立即进场。</p>
-			</div>
-			<div class="bloc" now="now" delay="400" animation="fadeIn">
-				<p>请轻触屏幕进入下一个区块。</p>
+			<div id="steps" class="bloc" now="now" delay="400" animation="fadeIn">
+				<h1>smooth.js十分易于使用</h1>
 			</div>
 			<div class="bloc" animation="swing">
-				<p>这是一个bloc区块，它会根据用户交互依次进场。</p>
+				<p>1. 引入Javascript文件以及CSS样式表</p>
 			</div>
-			<div class="bloc"  animation="fadeIn">
-				<p>这依然是一个bloc区块，它会根据用户交互依次进场。</p>
+			<div class="bloc" animation="fadeIn">
+				<p>2. 在HTML中声明式地书写演示文稿</p>
 			</div>
-			<div class="bloc"  animation="fadeIn">
-				<p>你可以可以通过左右滑动屏幕直接进入下一个stage，当然通过Javascript也可以设置为上下滑动。</p>
+			<div class="bloc" animation="lightSpeedIn">
+				<p>3. 在浏览器中查看效果</p>
 			</div>
+			<div id="bub1" class="bloc bubble" now="now" animation="bottomIn"></div>
+			<div id="bub2" class="bloc bubble" now="now" animation="bottomIn"></div>
+			<div id="bub3" class="bloc bubble" now="now" animation="bottomIn"></div>
 		</section>
 		<section class="stage" id="s-3">
-			<div class="bloc" now="now" animation="rubberBand">
-				<p>如果你倾向于制作一个H5页面，那么你可以把bloc都设置为now，并设置一定的delay。</p>
-			</div>
-			<div class="bloc" now="now" delay="400" animation="lightSpeedIn">
-				<p>如果你倾向于制作一个PPT演示文稿，那么你可能希望让bloc一个接一个显示，那么你需要在Javascript中开启flow: true，这样，点击屏幕就会进入下一个bloc。</p>
-			</div>
-			<div class="bloc" animation="rightInReverse">
-				<p>smooth还提供了一个叫做锚点(anchor)的API，anchor允许你在一个元素上设置锚点，当轻触锚点时，会直接加载绑定的stage</p>
-				<pre>
-					//轻触#go-home回到stage-1
-					ppt.anchor('#go-home', '#stage-1')
-				</pre>
-			</div>
-			<div id="gohome" class="bloc" animation="rightInReverse">
-				<p id="goo">这里绑定了锚点，轻触立即回到第一屏</p>
-			</div>
+			
 		</section>
 		<section class="stage" id="s-4">
 			<div class="bloc" now="now" animation="fadeIn">

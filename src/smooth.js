@@ -155,6 +155,9 @@
 			this.index = nextIndex
 		},
 		anchor: function(tag, target){
+			touch(tag).on('tap', function(event){
+				alert(event)
+			})
 		}
 	}
 
