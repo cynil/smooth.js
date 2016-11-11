@@ -64,15 +64,9 @@
 			this._load(this.stages[0])
 		},
 		_bindEvents: function(){
-
-/*			document.body.addEventListener('click', this.nextStageHandler.bind(this))
-			document.body.addEventListener('dblclick', this.nextBlocHandler.bind(this))
-			*/
-
 			touch(document.body)
 				.on('swipe', this.nextStageHandler.bind(this))
 				.on('tap', this.nextBlocHandler.bind(this))
-
 		},
 		nextStageHandler: function(event){
 			if(this.options.direction === 'vertical' && (event.direction === 0 || event.direction === 2)) return

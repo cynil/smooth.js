@@ -20,6 +20,12 @@ $blue1: #3283b0;
     border-radius: 50%;
 }
 
+@mixin bloc-h1{
+    text-align: center;
+    padding: 2em;
+    font-size: 24px;
+}
+
 body{
     font-size: $fontSize;
     color: $foreColor;
@@ -84,14 +90,18 @@ main{
             }
         }
     }
-
     #s-2{
+        background-color: deeppink;
+
+        .bloc h1{
+            @include bloc-h1;
+        }
+    }
+    #s-3{
         background-color: $blue0;
 
         #steps h1{
-            text-align: center;
-            padding: 2em;
-            font-size: 24px;
+            @include bloc-h1;
         }
         #bub1{
             @include bubble;
@@ -115,11 +125,6 @@ main{
             right: -60px;
         }
     }
-
-    #s-3{
-        background-color: $foreColor;
-    }
-
     #s-4{
         background-color: slategray;
     }
