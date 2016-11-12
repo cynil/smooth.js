@@ -1,3 +1,5 @@
+//smooth.js
+//git repository: https://github.com/cynil/smooth.js
 (function(window, factory){
 	if(typeof define === 'function' && define.amd){
 		define(factory)
@@ -9,15 +11,14 @@
 	}
 })(window, function(){
 	'use strict';
-/**
- * utils
- */
+	
+	//utils
+
 	function makeArray(list){
 		return Array.prototype.slice.call(list)
 	}
-	function touch(el){
-		var el = typeof el === 'string' ? document.querySelector(el) : el
-		return new Touch(el)
+	function isFunc(thing){
+		return Object.prototype.toString.call(thing) === '[object Function]'
 	}
 	function throttle(fn, interval){
 		var stamp = Date.now()
@@ -33,15 +34,33 @@
 		if(!el) throw 'touch element not found'
 		return new Touch(el)
 	}
+	function getAnchoredBloc(el){
+		while(el){
+			if(el.classList && el.classList.contains('bloc') && el.getAttribute('anchor')){
+				return el
+            }
+            el = el.parentNode
+        }
+        return false
+    }
+	function cssAnimate(node, parent, klass, cb){
+		node.classList.add(klass)
+		parent.appendChild(node)
+		node.addEventListener('animationend', function clearAnimation(event){
+			node.classList.remove(klass)
+			this.removeEventListener('animationend', clearAnimation)
+			if(cb && isFunc(cb)){
+				cb()
+			}
+		})
+	}
 
+	//smooth
 
-/**
- * smooth.js
- * git repository: https://github.com/cynil/smooth.js
- */
 	function Smooth(el, options){
 		this.el = el
 		this.options = options || {}
+		this.animations = options.animations || {}
 		this.stages = []
 		this._init()
 	}
@@ -71,41 +90,41 @@
 		nextStageHandler: function(event){
 			if(this.options.direction === 'vertical' && (event.direction === 0 || event.direction === 2)) return
 			if(this.options.direction === 'horizontal' && (event.direction === 1 || event.direction === 3)) return
-			var next
 
 			if(event.direction === 2 || event.direction === 3){
-				next = this.index + 1
-				if(next === this.stages.length){
-					return 
-				}
+				var next = this.index + 1
 			}
 			else{
 				next = this.index - 1
-				if(next === -1){
-					return
-				}
 			}
+			if(next === this.stages.length || next === -1) return
 			this._load(this.stages[next])
 		},
 
 		nextBlocHandler: function(event){
-			var stage = this.stages[this.index]
-			if(!this.played){
+			var stage = this.stages[this.index],
+			    possibleAnchoredBloc = getAnchoredBloc(event.target)
+			
+			if(!possibleAnchoredBloc){
 				var currentBloc = stage.blocs.filter(function(bloc){
 					return bloc.now !== 'now'
 				})[stage.currentBloc]
-				console.log(stage.currentBloc)
 
-				if(!currentBloc || stage.currentBloc >= stage.blocs.length) return
-
-				currentBloc.el.classList.add(currentBloc.animation)
-				stage.el.appendChild(currentBloc.el)
-				currentBloc.el.addEventListener('animationend', function clearAnimation(event){
-					currentBloc.el.classList.remove(currentBloc.animation)
-					this.removeEventListener('animationend', clearAnimation)
-					stage.currentBloc++
-				})
+                //if no more blocs, load next stage
+				if(!currentBloc || stage.currentBloc >= stage.blocs.length){
+					var next = this.index + 1
+					if(next >= this.stages.length) return
+					this._load(this.stages[next])
+                }else{
+					cssAnimate(currentBloc.el, stage.el, currentBloc.animation, function(){
+						stage.currentBloc++
+					})
+				}
 			}
+			else if(possibleAnchoredBloc){
+				var anchor = possibleAnchoredBloc.getAttribute('anchor')
+				this._load(this.stages[anchor])
+            }
 		},
 		_load: function(stage){
 			var nextIndex = this.stages.indexOf(stage),
@@ -113,7 +132,7 @@
 				currentStage = this.stages[this.index],
 				animation = this.options.stageAnimation,
 				self = this
-			console.log(forwards, 'prev: ' + this.index, 'current: ' + nextIndex)
+
 			if(forwards){
 				stage.el.classList.remove(animation + 'Reverse')
 				stage.el.classList.add(animation)
@@ -131,13 +150,18 @@
 					stage.blocs.map(function(bloc, index){
 						var delay = bloc.el.getAttribute('delay') || 0
 						if(bloc.now === 'now'){
-							var clock = setTimeout(function(){
-								bloc.el.classList.add(bloc.animation)
-								stage.el.appendChild(bloc.el)
-								bloc.el.addEventListener('animationend', function clearAnimation(event){
-									bloc.el.classList.remove(bloc.animation)
-									this.removeEventListener('animationend', clearAnimation)
-								})
+							var clock = setTimeout(function(){								
+								//check javascript animation first
+								var possibleJSAnimation = self.animations[bloc.animation]
+
+								if(possibleJSAnimation && isFunc(possibleJSAnimation)){
+									possibleJSAnimation(bloc.el, stage.el)
+                                }else{
+                                    //no js animation provided, use CSS instead
+									cssAnimate(bloc.el, stage.el, bloc.animation, function(){
+										clearTimeout(clock)
+									})
+								}
 							}, delay)
 						}
 					})
@@ -147,11 +171,6 @@
 			})
 
 			this.index = nextIndex
-		},
-		anchor: function(tag, target){
-			touch(tag).on('tap', function(event){
-				alert(event)
-			})
 		}
 	}
 
@@ -169,7 +188,7 @@
 				rawBlocs = this.el.querySelectorAll('.bloc')
 
 			makeArray(rawBlocs).map(function(raw){
-				var animation = raw.getAttribute('animation'),
+				var animation = raw.getAttribute('animation') || 'expandIn',
 					now = raw.getAttribute('now')
 
 				self.blocs.push({
@@ -181,9 +200,8 @@
 		}
 	}
 
-	/**
-	 * start Touch.js
-	 */
+	//Touch.js
+
 	var Touch = (function(){
 		var TAP_DURATION = 200
 
@@ -282,6 +300,9 @@
 		}
 		return Touch
 	})()
+
+	//expose some useful methods
+	Smooth.animate = cssAnimate
 
 	//expose Smooth to global
 	return Smooth
