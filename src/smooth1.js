@@ -97,30 +97,28 @@
 			var stage = this.stages[this.index],
 			    possibleAnchor = event.target.getAttribute('anchor'),
 			    possibleHandler = event.target.getAttribute('ontap')
-				console.log(event.target, possibleAnchor, possibleHandler)
 			
 			if(possibleHandler && isFunc(this.methods[possibleHandler])){
-				this.methods[possibleHandler].call(this, event, stage)
+				this.methods[possibleHandler].call(this, event)
             }
             else if(!possibleHandler && possibleAnchor){
 				this._load(this.stages[anchor])
             }
 			else if(!possibleAnchor){
 				if(!stage.next()){
-					this._load(this.stages[this.index + 1])
+					this._load(this.stages[next])
                 }
 			}
 		},
 		
-		_load: function(stage){			
-			if(!(stage instanceof Stage)) return
-
+		_load: function(stage){
 			var nextIndex = this.stages.indexOf(stage),
 				currentStage = this.stages[this.index],
 				animation = this.options.stageAnimation,
 				self = this
+			
+			if(!stage instanceof Stage) return
 
-			console.log(stage)
 			if(nextIndex > this.index){
 				stage.el.classList.remove(animation + 'Reverse')
 				stage.el.classList.add(animation)
@@ -310,4 +308,26 @@
 
 	//expose Smooth to global
 	return Smooth
+})
+
+var smooth = new Smooth(main, {
+    direction: 'vertical',
+    stageAnimation: 'bottomExpandIn',
+    animations: {
+        typing: function(node, parent){}
+    },
+    methods: {
+        handleBonus: function(event, currentStage){
+            axios.get('api').then(function(data){
+                Smooth.animate(p(data), bloc, 'fadeIn')
+            })
+        }
+    }
+})
+
+Smooth.touch('#dot').on('tap', function(event){
+	var currentStage = smooth.stages[smooth.index]
+	if(!currentStage.next()){
+        smooth.load(smooth.stages[smooth.index + 1])
+    }
 })
