@@ -5,6 +5,9 @@ $fontSize: 16px;
 $foreColor: #efefef;
 $blue0: #3692c5;
 $blue1: #3283b0;
+$pink: deeppink;
+$orange: #ff6965;
+$purple: #ab98e8;
 
 @mixin v-center{
     /*w, h required*/
@@ -91,14 +94,14 @@ main{
         }
     }
     #s-2{
-        background-color: deeppink;
+        background-color: $pink;
 
         .bloc h1{
             @include bloc-h1;
         }
     }
     #s-3{
-        background-color: $blue0;
+        background-color: $purple;
 
         #steps h1{
             @include bloc-h1;
@@ -126,6 +129,10 @@ main{
         }
     }
     #s-4{
-        background-color: slategray;
+        background-color: $orange;
+
+        h1{
+            @include bloc-h1;
+        }
     }
 }
