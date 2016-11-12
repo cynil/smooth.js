@@ -1,0 +1,12 @@
+@keyframes fade{
+    to{
+        font-size: 3em;
+        transform: translate3d(0)
+    }
+}
+
+h1{
+    animation: 0.5s fade;
+    animation-iteration-count: 2;
+    animation-direction: alternate;
+}
