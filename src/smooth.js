@@ -24,7 +24,6 @@
 		var stamp = Date.now()
 		return function(){
 			if(Date.now() - stamp > (interval || 800)){
-				console.log(Date.now() - stamp)
 				fn.apply(this, arguments)
 				stamp = Date.now()
 			}
@@ -97,13 +96,13 @@
 			var stage = this.stages[this.index],
 			    possibleAnchor = event.target.getAttribute('anchor'),
 			    possibleHandler = event.target.getAttribute('ontap')
-				console.log(event.target, possibleAnchor, possibleHandler)
 			
+			console.log(event.target, possibleHandler, possibleAnchor)
 			if(possibleHandler && isFunc(this.methods[possibleHandler])){
 				this.methods[possibleHandler].call(this, event, stage)
             }
             else if(!possibleHandler && possibleAnchor){
-				this._load(this.stages[anchor])
+				this._load(this.stages[possibleAnchor])
             }
 			else if(!possibleAnchor){
 				if(!stage.next()){
@@ -120,7 +119,6 @@
 				animation = this.options.stageAnimation,
 				self = this
 
-			console.log(stage)
 			if(nextIndex > this.index){
 				stage.el.classList.remove(animation + 'Reverse')
 				stage.el.classList.add(animation)
@@ -161,6 +159,8 @@
 			this.index = nextIndex
 		}
 	}
+
+	Smooth.prototype.goto = Smooth.prototype._load
 
 	function Stage(el){
 		this.el = el
