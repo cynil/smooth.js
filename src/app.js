@@ -2,8 +2,8 @@ var Smooth = require('./smooth.js')
 
 var smooth = document.querySelector('main')
 var app = new Smooth(smooth, {
-    direction: 'vertical',
-    stageAnimation: 'bottomIn',
+    direction: 'horizontal',
+    stageAnimation: 'rightIn',
     animations: {
         typing: function(node, parent){
             var p = node.getElementsByTagName('p')[0],

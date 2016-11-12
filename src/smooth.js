@@ -23,7 +23,8 @@
 	function throttle(fn, interval){
 		var stamp = Date.now()
 		return function(){
-			if(Date.now() - stamp > (interval || 100)){
+			if(Date.now() - stamp > (interval || 800)){
+				console.log(Date.now() - stamp)
 				fn.apply(this, arguments)
 				stamp = Date.now()
 			}
@@ -84,8 +85,8 @@
 		},
 		_bindEvents: function(){
 			touch(document.body)
-				.on('swipe', this.nextStageHandler.bind(this))
-				.on('tap', this.nextBlocHandler.bind(this))
+				.on('swipe', throttle(this.nextStageHandler.bind(this)))
+				.on('tap', throttle(this.nextBlocHandler.bind(this)))
 		},
 		nextStageHandler: function(event){
 			if(this.options.direction === 'vertical' && (event.direction === 0 || event.direction === 2)) return
@@ -117,6 +118,7 @@
 					this._load(this.stages[next])
                 }else{
 					cssAnimate(currentBloc.el, stage.el, currentBloc.animation, function(){
+						console.log(currentBloc.el)
 						stage.currentBloc++
 					})
 				}
