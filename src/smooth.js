@@ -110,7 +110,8 @@
 		_init: function(){
 			var rawStage = this.el.querySelectorAll('.stage'),
 					self = this
-
+			
+			this.images = this.el.querySelectorAll('img')
 			makeArray(rawStage).map(function(raw){
 				var stage = self.el.removeChild(raw)
 				self.stages.push(new Stage(stage))
@@ -131,7 +132,7 @@
 			}
 		},
 		getResource: function(){
-			var images = this.el.querySelectorAll('img'),
+			var images = this.images,
 			    progress = 0,
 			    self = this
 			
@@ -145,14 +146,14 @@
 				var src = img.dataset.src
 				if(src){
 					img.onerror = img.onload = function(e){
-						if(++progress < images.length){
-							self._emit('progress', {
-								current: progress,
-								total: images.length
-							})
-						}
-						else{
-							self._emit('ready')
+						self._emit('progress', {
+							current: ++progress,
+							total: images.length
+						})
+						if(progress >= images.length){
+							setTimeout(function(){
+								self._emit('ready')
+							}, 60)
 						}
 						img.onload = null; img = null
 					}
@@ -246,7 +247,6 @@
 			}
 		}
 	}
-	console.log(Event)
 	extend(Event.prototype, Smooth.prototype)    
 	Smooth.prototype.goto = Smooth.prototype._load
 

@@ -23,4 +23,17 @@ window.addEventListener('DOMContentLoaded', function(){
             }
         }
     })
+
+    var indicator = document.createElement('div')
+    indicator.style.cssText = "position:absolute;height:24px;width:100%;top:0;bottom:0;margin:auto;color:#323232;font-size:20px;text-align:center;"
+    document.body.appendChild(indicator)
+
+    smooth.on('ready', function(e){
+        document.body.removeChild(indicator)
+    })
+
+    smooth.on('progress', function(e){
+        console.log(e.current + '/' + e.total)
+        indicator.innerHTML = e.current + '/' + e.total
+    })
 })
