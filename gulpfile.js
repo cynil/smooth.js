@@ -16,6 +16,8 @@ var minify = require('gulp-minify-css')
 var sync = require('browser-sync')
     reload = sync.reload
 
+///////////////////
+//build
 gulp.task('scss', function(){
     return gulp.src('./style/app.scss')
         .pipe(sass())
@@ -44,4 +46,22 @@ gulp.task('default', ['scss', 'js'], function(){
     })
 
     gulp.watch(['./style/*.scss','./src/*.js','./build/index.html'], ['scss', 'js'])
+})
+
+/////////////////////
+//to dist
+gulp.task('scss-dist', function(){
+    return gulp.src('./style/merge.scss')
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(minify())
+        .pipe(rename('smooth.css'))
+        .pipe(gulp.dest('./dist/'))
+})
+gulp.task('js-dist', function(){
+    return gulp.src('./src/smooth.js')
+        .pipe(gulp.dest('./dist/'))
+})
+gulp.task('dist', ['scss-dist', 'js-dist'], function(){
+    console.log('build success')
 })
