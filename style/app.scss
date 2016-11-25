@@ -2,12 +2,9 @@
 @import "animate.scss";
 
 $fontSize: 16px;
-$foreColor: #efefef;
+$foreColor: #fff;
 $blue0: #3692c5;
 $blue1: #3283b0;
-$pink: deeppink;
-$orange: #ff6965;
-$purple: #ab98e8;
 
 @mixin v-center{
     /*w, h required*/
@@ -33,12 +30,11 @@ body{
     font-size: $fontSize;
     color: $foreColor;
     line-height: 1.42857142857;
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif
 }
-
 p{
     margin: 1em;
 }
-
 a{
     color: $foreColor;
     text-decoration: none;
@@ -98,8 +94,6 @@ main{
         }
     }
     #s-2{
-        background-color: $pink;
-
         .bloc h1{
             @include bloc-h1;
         }
@@ -119,8 +113,6 @@ main{
         }
     }
     #s-3{
-        background-color: $purple;
-
         #steps h1{
             @include bloc-h1;
         }
@@ -147,15 +139,11 @@ main{
         }
     }
     #s-4{
-        background-color: $orange;
-
         h1{
             @include bloc-h1;
         }
     }
     #s-5{
-        background-color: #263942;
-
         .bloc{
             position: absolute;
             width: 100%;
@@ -167,13 +155,26 @@ main{
         }
     }
 }
-
-#dot{
-    height: 40px; 
-    width: 40px; 
-    border-radius: 20px;
-    background-color: #323232; 
+.pc-redirect{
+    width: 300px; 
+    height: 250px;
+    margin: auto;
     position: absolute;
-    bottom: 40px; 
-    right: 40px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: #323232;
+    text-align: center;
+    display: none;
+    h1{
+        color: $blue0;
+    }
+    p{
+        padding: 4px;
+        margin: 0;
+    } 
+}
+img{
+    max-width: 100%;
 }

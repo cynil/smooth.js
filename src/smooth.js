@@ -1,9 +1,7 @@
 //smooth.js
 //git repository: https://github.com/cynil/smooth.js
-//?todo: on('event') hooks
 //todo: canvas animation
 //todo: a theme
-//?todo: abstract of Event
 (function(window, factory){
 	if(typeof define === 'function' && define.amd){
 		define(factory)
@@ -17,7 +15,7 @@
 	'use strict';
 
 	//utils
-
+	var animationend = 'onanimationend' in window ? 'animationend' : 'webkitAnimationEnd'	
 	function makeArray(list){
 		return Array.prototype.slice.call(list)
 	}
@@ -48,15 +46,15 @@
 	function cssAnimate(node, parent, klass, cb){
 		node.classList.add(klass)
 		parent.appendChild(node)
-		node.addEventListener('webkitAnimationEnd', function clearAnimation(event){
-			this.removeEventListener('webkitAnimationEnd', clearAnimation)
+		node.addEventListener(animationend, function clearAnimation(event){
+			this.removeEventListener(animationend, clearAnimation)
 			if(cb && isFunc(cb)){
 				cb()
 			}
 		})
 	}
-    //Event.js
-    
+
+    //Event.js   
     var Event = (function(){
         function Event(){
 					this.events = {}
@@ -92,8 +90,8 @@
 				}
 				return Event
     })()
-	//smooth.js
 
+	//smooth.js
 	function Smooth(el, options){
 		Event.apply(this)
 		
@@ -113,19 +111,26 @@
 			
 			this.resource = this.el.querySelectorAll('[data-src]')
 			makeArray(rawStage).map(function(raw){
-				var stage = self.el.removeChild(raw)
+				var stage = self.el.removeChild(raw),
+					theme = stage.getAttribute('theme') || '#323232'
+
+				if(theme) stage.style.backgroundColor = theme
 				self.stages.push(new Stage(stage))
 			})
 			this._bindDOMEvents()
 			this.on('ready', function(e){
 				this.el.classList.add('show')
-				this._load(this.stages[0])
+				var manual = this.el.getAttribute('manual')
+				if(!manual || manual === "false"){
+					this._load(this.stages[0])
+				}
 			})
 			if(this.resource){
+				setTimeout(function(){self._emit('loadstart')}, 40)
 				this.getResource()
 			}
 			else{
-				setTimeout(function(){self._emit('ready')}, 60)
+				setTimeout(function(){self._emit('ready')}, 80)
 			}
 		},
 		getResource: function(){
@@ -134,7 +139,7 @@
 			    self = this
 			
 			if(resources.length < 1){
-				setTimeout(function(){self._emit('ready')}, 60)
+				setTimeout(function(){self._emit('ready')}, 80)
 			}
 			
 			makeArray(resources).map(function(res){
@@ -146,7 +151,7 @@
 							total: resources.length
 						})
 						if(progress >= resources.length){
-							setTimeout(function(){self._emit('ready')}, 60)
+							setTimeout(function(){self._emit('ready')}, 80)
 						}
 						res.onload = null; res = null
 					}
@@ -221,7 +226,7 @@
 								if(possibleJSAnimation && isFunc(possibleJSAnimation)){
 									possibleJSAnimation.call(self, bloc.el, stage.el)
 								}else{
-									//no js animation provided, use CSS instead
+									//no js animation specified, use CSS instead
 									cssAnimate(bloc.el, stage.el, bloc.animation, function(){
 										bloc.el.classList.remove(bloc.animation)
 										clearTimeout(clock)
@@ -234,6 +239,10 @@
 				}
 				stage.el.classList.remove(klass)
 			})
+			this._emit('paging', {
+				current: nextIndex,
+				total: this.stages.length
+			})
 			this.index = nextIndex
 		},
 
@@ -241,12 +250,14 @@
 			var currentStage = this.stages[this.index]
 
 			if(!currentStage.next()){
-				this.goto(this.stages[this.index + 1])
+				this.go(this.index + 1)
 			}
 		}
 	}
 	extend(Event.prototype, Smooth.prototype)    
-	Smooth.prototype.goto = Smooth.prototype._load
+	Smooth.prototype.go = function(index){
+		return this._load(this.stages[index])
+	}
 
 	function Stage(el){
 		this.el = el
@@ -262,8 +273,8 @@
 
 			makeArray(rawBlocs).map(function(raw){
 				var animation = raw.getAttribute('animation') || 'expandIn',
-						now = raw.getAttribute('now')
-
+					now = raw.getAttribute('now') || 'now'
+				
 				self.blocs.push({
 					el: self.el.removeChild(raw),
 					now: now,

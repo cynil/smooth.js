@@ -1,9 +1,7 @@
 //smooth.js
 //git repository: https://github.com/cynil/smooth.js
-//?todo: on('event') hooks
 //todo: canvas animation
 //todo: a theme
-//?todo: abstract of Event
 (function(window, factory){
 	if(typeof define === 'function' && define.amd){
 		define(factory)
@@ -17,7 +15,7 @@
 	'use strict';
 
 	//utils
-
+	var animationend = 'onanimationend' in window ? 'animationend' : 'webkitAnimationEnd'	
 	function makeArray(list){
 		return Array.prototype.slice.call(list)
 	}
@@ -48,15 +46,15 @@
 	function cssAnimate(node, parent, klass, cb){
 		node.classList.add(klass)
 		parent.appendChild(node)
-		node.addEventListener('webkitAnimationEnd', function clearAnimation(event){
-			this.removeEventListener('webkitAnimationEnd', clearAnimation)
+		node.addEventListener(animationend, function clearAnimation(event){
+			this.removeEventListener(animationend, clearAnimation)
 			if(cb && isFunc(cb)){
 				cb()
 			}
 		})
 	}
-    //Event.js
-    
+
+    //Event.js   
     var Event = (function(){
         function Event(){
 					this.events = {}
@@ -92,8 +90,8 @@
 				}
 				return Event
     })()
-	//smooth.js
 
+	//smooth.js
 	function Smooth(el, options){
 		Event.apply(this)
 		
@@ -119,9 +117,13 @@
 			this._bindDOMEvents()
 			this.on('ready', function(e){
 				this.el.classList.add('show')
-				this._load(this.stages[0])
+				var manual = this.el.getAttribute('manual')
+				if(!manual || manual === "false"){
+					this._load(this.stages[0])
+				}
 			})
 			if(this.resource){
+				this._emit('loadstart')
 				this.getResource()
 			}
 			else{
@@ -156,9 +158,14 @@
 		},
 
 		_bindDOMEvents: function(){
-			touch(this.el)
-				.on('swipe', throttle(this.delegateSwipe.bind(this)))
-				.on('tap', throttle(this.delegateTap.bind(this)))
+			if('ontouchstart' in document){
+				touch(this.el)
+					.on('swipe', throttle(this.delegateSwipe.bind(this)))
+					.on('tap', throttle(this.delegateTap.bind(this)))
+			}
+			else{
+				this.el.addEventListener('click', throttle(this.delegateTap.bind(this)))
+			}
 		},
 		
 		delegateSwipe: function(event){
@@ -228,6 +235,10 @@
 					stage.played = true
 				}
 				stage.el.classList.remove(klass)
+			})
+			this._emit('paging', {
+				current: nextIndex,
+				total: this.stages.length
 			})
 			this.index = nextIndex
 		},

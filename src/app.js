@@ -1,6 +1,11 @@
 var Smooth = require('./smooth.js')
 
 window.addEventListener('DOMContentLoaded', function(){
+    var pcRedirect = document.querySelector('.pc-redirect')
+    if(!('ontouchend' in window)) {
+        return pcRedirect.style.display = 'block'
+    }
+    document.body.removeChild(pcRedirect)
     var main = document.querySelector('main')
     var smooth = new Smooth(main, {
         animations: {
@@ -22,18 +27,5 @@ window.addEventListener('DOMContentLoaded', function(){
                 window.location = 'https://github.com/cynil/smooth.js'
             }
         }
-    })
-
-    var indicator = document.createElement('div')
-    indicator.style.cssText = "position:absolute;height:24px;width:100%;top:0;bottom:0;margin:auto;color:#323232;font-size:20px;text-align:center;"
-    document.body.appendChild(indicator)
-
-    smooth.on('ready', function(e){
-        document.body.removeChild(indicator)
-    })
-
-    smooth.on('progress', function(e){
-        console.log(e.current + '/' + e.total)
-        indicator.innerHTML = e.current + '/' + e.total
     })
 })
